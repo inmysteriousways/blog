@@ -1,0 +1,69 @@
+---
+title: "How Algebra and Machine Learning begin as one in the same"
+author: "Amanda Kiannejad"
+date: "2020-12-01T21:13:14-05:00"
+categories: R
+tags:
+- R Markdown
+- plot
+- regression
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## I am not joking!
+
+Rhetorical Question: What is a regression line? What is the procedure for linear regression? Answer: Linear regression is the modeling data with a linear function, y(x) =mx + b where m is the slope of the line, ie rise over run and b is the y-intercept y-intercept is the spot of crossing the y axis, x must be zero
+
+So, let us suppose that we are examining the number of people who check out books at a newly opened library The library wants to know if and when it should increase staffing as management states there should be 10 staff members to monitor 250 partions checking out material checked out at any given time This is all hypothetical
+
+So we have at the opening as the number of days the new library is open 0 there are 80 people who check out material 5 days post opening there are 10 people who check out material and so on The x and y look as below
+
+
+```{r library}
+
+days_opened <- c(0,5,10,15,20,40)
+patron_numbers <- c(80,100, 110,130,140,155)
+```
+
+## Including Plots
+
+The library is currently at day 57 when will they need to start hiring new staff so that they can easily meet the needs of new patron So what we need to do is write an lm statement in r and go from there
+
+```{r pressure}
+
+library_df <- as.data.frame( cbind(days_opened, patron_numbers))
+
+new_staff <- lm(patron_numbers~days_opened, data=library_df)
+new <- summary(new_staff)
+new
+plot( library_df$patron_numbers~ library_df$days_opened )
+abline(new_staff, col ="blue")
+```
+
+But how do we get the important information out of the R
+```{r}
+new_staff$coefficients
+
+b <- as.numeric( new_staff$coefficients[1])
+m <- as.numeric(  new_staff$coefficients[2])
+
+#y <- m*x +b
+
+```
+or to get the proposed number of days that they will need to add new staff would be 
+
+```{r}
+x <- 250
+
+y <- (x-b)/m 
+y
+
+```
+So at ~90 days after opening the new library will need to start hiring at least one new staff member. However, what was not taken into consideration with the simplified example is the the R2 and residuals.     These are important topics to explore because we see that the 
+```{r}
+summary(new_staff)
+```
+In the space called R-squared, the number 0.87, denotes that there is a good but not great correlation between the increase of patrons and the number of days that the library is open. Please note that at some point in time that number of patrons will level off and become stagnant or even decrease if books and other materials are not updated.  This will be explored more in another post as statistics is different beast all together.  
